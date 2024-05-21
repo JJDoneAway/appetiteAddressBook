@@ -21,6 +21,7 @@ export const useAddressStore = defineStore("address", {
     asc: true,
     filter: "",
     loading: false,
+    userName: "",
   }),
   actions: {
     setSelected(address) {
@@ -76,13 +77,6 @@ export const useAddressStore = defineStore("address", {
           this.currentPage = response.data.page;
           this.lastPage = response.data.totalPages;
           this.loading = false;
-        })
-        .catch((err) => {
-          console.log(err);
-          useMessageStore().addMessage(
-            "Authentication or authorization failed. Please check if you have the required SIAM roles. See Environment Tab"
-          );
-          this.loading = false;
         });
     },
     async updateAddress() {
@@ -132,6 +126,9 @@ export const useAddressStore = defineStore("address", {
             this.newAddress = {};
           });
       });
+    },
+    getUserName() {
+      this.userName = import.meta.env.VITE_NAME;
     },
   },
 });

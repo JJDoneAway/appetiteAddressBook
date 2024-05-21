@@ -11,7 +11,6 @@
   "dependencies": {
     "axios": "^1.2.2",
     "marked": "^4.2.12",
-    "oidc-client": "^1.11.5",
     "pinia": "^2.0.28",
     "pnpm": "^8.14.0",
     "vue": "^3.2.45",

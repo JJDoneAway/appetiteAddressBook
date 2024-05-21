@@ -23,6 +23,9 @@
           >
         </div>
       </div>
+      <div class="w3-bar-item w3-right" style="padding: 1em 1em">
+        Address Book of {{ userName }}
+      </div>
     </div>
   </div>
 </template>
@@ -30,10 +33,12 @@
 import { useRouter } from "vue-router";
 import { useAddressStore } from "@/store/address";
 import { useMessageStore } from "@/store/message";
+import { onMounted, computed } from "vue";
 
 const router = useRouter();
 const addressStor = useAddressStore();
 const messageStor = useMessageStore();
+const userName = computed(() => addressStor.userName);
 
 const putMessage = (text) => messageStor.addMessage(text);
 
@@ -42,6 +47,10 @@ const reset = () => {
   putMessage("Database was reset to its default values.");
   router.push({ name: "Editor" });
 };
+
+onMounted(() => {
+  addressStor.getUserName();
+});
 </script>
 
 <style scoped>
