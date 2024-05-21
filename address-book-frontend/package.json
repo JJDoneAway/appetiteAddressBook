@@ -1,0 +1,31 @@
+{
+  "name": "address-book-frontend",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite --port=8081 --mode=development",
+    "build:ci": "vite build --mode=odj",
+    "lint:ci": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --ignore-path .gitignore",
+    "test:ci": "echo \"No tests implemented\""
+  },
+  "dependencies": {
+    "axios": "^1.2.2",
+    "marked": "^4.2.12",
+    "oidc-client": "^1.11.5",
+    "pinia": "^2.0.28",
+    "pnpm": "^8.14.0",
+    "vue": "^3.2.45",
+    "vue-json-pretty": "^2.2.3",
+    "vue-loading-overlay": "^6.0.3",
+    "vue-router": "^4.1.6"
+  },
+  "devDependencies": {
+    "@rushstack/eslint-patch": "^1.1.4",
+    "@vitejs/plugin-vue": "^4.0.0",
+    "@vue/eslint-config-prettier": "^7.0.0",
+    "eslint": "^8.22.0",
+    "eslint-plugin-vue": "^9.3.0",
+    "prettier": "^2.7.1",
+    "vite": "^4.0.0"
+  }
+}

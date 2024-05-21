@@ -1,0 +1,460 @@
+{
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "schemes": [
+        "http"
+    ],
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a simple show case app for the Appetite POC",
+        "title": "Appetite POC App Example: Address Book",
+        "contact": {
+            "name": "Johannes Höhne",
+            "url": "https://vcs.sys.schwarz/hoehnejo",
+            "email": "Johannes.Hoehne@mail.schwarz"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "paths": {
+        "/addresses": {
+            "get": {
+                "description": "Will paginate and filter the list of all currently known addresses",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "addresses"
+                ],
+                "summary": "Pagination over all addresses",
+                "operationId": "getAllAddresses",
+                "parameters": [
+                    {
+                        "minimum": 0,
+                        "type": "integer",
+                        "description": "Page number starting from 0",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "Max elements per page",
+                        "name": "size",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort result by attribute asc or desc. E.g.: 'lastName' will order by last name asc. '-firstName,-lastName' will order by first name and last name desc",
+                        "name": "sort",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by value. E.g.: [[\u0026quot;firstName\u0026quot;,\u0026quot;like\u0026quot;,\u0026quot;jo\u0026quot;],[\u0026quot;OR\u0026quot;],[\u0026quot;lastName\u0026quot;,\u0026quot;like\u0026quot;,\u0026quot;jo\u0026quot;]] will filer all addresses with an 'jo' in the first or last name",
+                        "name": "filters",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Page"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Will add a new addresses entity to the storage. The new created addresses will be returned. Don't add the Id to the addresses parameter",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "addresses"
+                ],
+                "summary": "Add a new addresses",
+                "operationId": "addAddress",
+                "parameters": [
+                    {
+                        "description": "The new addresses without ID",
+                        "name": "addresses",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.AddressChange"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.Address"
+                        }
+                    },
+                    "400": {
+                        "description": "ID must be zero, Unparsable JSON body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Will delete all addresses. It is not common to have an endpoint like this but we illustrate how to manage security for this kind of operations",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "addresses"
+                ],
+                "summary": "Delete all addresses",
+                "operationId": "deleteAllAddresses",
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    }
+                }
+            }
+        },
+        "/addresses/default": {
+            "post": {
+                "description": "Will insert all initial dummy addresses to restore the initial state",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "addresses"
+                ],
+                "summary": "Reset address book",
+                "operationId": "resetDB",
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    }
+                }
+            }
+        },
+        "/addresses/{id}": {
+            "get": {
+                "description": "Get a address with the provided ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "addresses"
+                ],
+                "summary": "Get one address",
+                "operationId": "getOneAddress",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of the user",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Address"
+                        }
+                    },
+                    "404": {
+                        "description": "Unknown ID",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Will update an existing address which is identified via its ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "addresses"
+                ],
+                "summary": "Update an existing address",
+                "operationId": "updateOneAddress",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of the address",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "The new address without ID",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.AddressChange"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Address"
+                        }
+                    },
+                    "400": {
+                        "description": "Unparsable JSON body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Unknown ID",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete a address with the provided ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "addresses"
+                ],
+                "summary": "Delete one address",
+                "operationId": "deleteOneAddress",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID of the address",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "400": {
+                        "description": "Unknown ID",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/metrics": {
+            "get": {
+                "description": "Provide a list of all currently known Prometheus metrics",
+                "produces": [
+                    "text/plain"
+                ],
+                "tags": [
+                    "metrics"
+                ],
+                "summary": "List all Prometheus metrics",
+                "operationId": "metrics",
+                "responses": {
+                    "200": {
+                        "description": "Prometheus metrics line by line",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/status/build": {
+            "get": {
+                "description": "Will just tell when the app was build",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "status"
+                ],
+                "summary": "Get build time stamp",
+                "operationId": "getBuild",
+                "responses": {
+                    "200": {
+                        "description": "timestamp",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/status/health": {
+            "get": {
+                "description": "Will just tell you if the app is healthy",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "status"
+                ],
+                "summary": "Tell the health status",
+                "operationId": "healthStatus",
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/status/up": {
+            "get": {
+                "description": "Will just tell you if the app is upp and running",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "status"
+                ],
+                "summary": "Tell Up status",
+                "operationId": "upStatus",
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/swagger/doc.json": {
+            "get": {
+                "description": "Provide the OpenAPI json",
+                "produces": [
+                    "text/plain"
+                ],
+                "tags": [
+                    "swagger"
+                ],
+                "summary": "Show Open API Doc",
+                "operationId": "swagger",
+                "responses": {
+                    "200": {
+                        "description": "OpenAPI json",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "models.Address": {
+            "type": "object",
+            "required": [
+                "email",
+                "firstName",
+                "lastName",
+                "phone"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "firstName": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "lastName": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.AddressChange": {
+            "type": "object",
+            "required": [
+                "email",
+                "firstName",
+                "lastName",
+                "phone"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "firstName": {
+                    "type": "string"
+                },
+                "lastName": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Page": {
+            "type": "object",
+            "properties": {
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Address"
+                    }
+                },
+                "page": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                },
+                "totalPages": {
+                    "type": "integer"
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "description": "Managing your addresses",
+            "name": "addresses"
+        },
+        {
+            "description": "status of the app",
+            "name": "status"
+        },
+        {
+            "description": "prometheus metrics",
+            "name": "metrics"
+        }
+    ]
+}

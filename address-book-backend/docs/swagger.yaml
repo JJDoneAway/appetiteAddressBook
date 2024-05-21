@@ -1,0 +1,313 @@
+consumes:
+- application/json
+definitions:
+  models.Address:
+    properties:
+      email:
+        type: string
+      firstName:
+        type: string
+      id:
+        type: integer
+      lastName:
+        type: string
+      phone:
+        type: string
+    required:
+    - email
+    - firstName
+    - lastName
+    - phone
+    type: object
+  models.AddressChange:
+    properties:
+      email:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      phone:
+        type: string
+    required:
+    - email
+    - firstName
+    - lastName
+    - phone
+    type: object
+  models.Page:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/models.Address'
+        type: array
+      page:
+        type: integer
+      total:
+        type: integer
+      totalPages:
+        type: integer
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: Johannes.Hoehne@mail.schwarz
+    name: Johannes Höhne
+    url: https://vcs.sys.schwarz/hoehnejo
+  description: This is a simple show case app for the Appetite POC
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: 'Appetite POC App Example: Address Book'
+  version: "1.0"
+paths:
+  /addresses:
+    delete:
+      description: Will delete all addresses. It is not common to have an endpoint
+        like this but we illustrate how to manage security for this kind of operations
+      operationId: deleteAllAddresses
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+      summary: Delete all addresses
+      tags:
+      - addresses
+    get:
+      description: Will paginate and filter the list of all currently known addresses
+      operationId: getAllAddresses
+      parameters:
+      - description: Page number starting from 0
+        in: query
+        minimum: 0
+        name: page
+        type: integer
+      - description: Max elements per page
+        in: query
+        minimum: 1
+        name: size
+        type: integer
+      - description: 'Sort result by attribute asc or desc. E.g.: ''lastName'' will
+          order by last name asc. ''-firstName,-lastName'' will order by first name
+          and last name desc'
+        in: query
+        name: sort
+        type: string
+      - description: 'Filter by value. E.g.: [[&quot;firstName&quot;,&quot;like&quot;,&quot;jo&quot;],[&quot;OR&quot;],[&quot;lastName&quot;,&quot;like&quot;,&quot;jo&quot;]]
+          will filer all addresses with an ''jo'' in the first or last name'
+        in: query
+        name: filters
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Page'
+      summary: Pagination over all addresses
+      tags:
+      - addresses
+    post:
+      consumes:
+      - application/json
+      description: Will add a new addresses entity to the storage. The new created
+        addresses will be returned. Don't add the Id to the addresses parameter
+      operationId: addAddress
+      parameters:
+      - description: The new addresses without ID
+        in: body
+        name: addresses
+        required: true
+        schema:
+          $ref: '#/definitions/models.AddressChange'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Address'
+        "400":
+          description: ID must be zero, Unparsable JSON body
+          schema:
+            type: string
+      summary: Add a new addresses
+      tags:
+      - addresses
+  /addresses/{id}:
+    delete:
+      description: Delete a address with the provided ID
+      operationId: deleteOneAddress
+      parameters:
+      - description: ID of the address
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Unknown ID
+          schema:
+            type: string
+      summary: Delete one address
+      tags:
+      - addresses
+    get:
+      description: Get a address with the provided ID
+      operationId: getOneAddress
+      parameters:
+      - description: ID of the user
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Address'
+        "404":
+          description: Unknown ID
+          schema:
+            type: string
+      summary: Get one address
+      tags:
+      - addresses
+    put:
+      consumes:
+      - application/json
+      description: Will update an existing address which is identified via its ID
+      operationId: updateOneAddress
+      parameters:
+      - description: ID of the address
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: The new address without ID
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.AddressChange'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Address'
+        "400":
+          description: Unparsable JSON body
+          schema:
+            type: string
+        "404":
+          description: Unknown ID
+          schema:
+            type: string
+      summary: Update an existing address
+      tags:
+      - addresses
+  /addresses/default:
+    post:
+      description: Will insert all initial dummy addresses to restore the initial
+        state
+      operationId: resetDB
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+      summary: Reset address book
+      tags:
+      - addresses
+  /metrics:
+    get:
+      description: Provide a list of all currently known Prometheus metrics
+      operationId: metrics
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: Prometheus metrics line by line
+          schema:
+            type: string
+      summary: List all Prometheus metrics
+      tags:
+      - metrics
+  /status/build:
+    get:
+      description: Will just tell when the app was build
+      operationId: getBuild
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: timestamp
+          schema:
+            type: string
+      summary: Get build time stamp
+      tags:
+      - status
+  /status/health:
+    get:
+      description: Will just tell you if the app is healthy
+      operationId: healthStatus
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+      summary: Tell the health status
+      tags:
+      - status
+  /status/up:
+    get:
+      description: Will just tell you if the app is upp and running
+      operationId: upStatus
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+      summary: Tell Up status
+      tags:
+      - status
+  /swagger/doc.json:
+    get:
+      description: Provide the OpenAPI json
+      operationId: swagger
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OpenAPI json
+          schema:
+            type: string
+      summary: Show Open API Doc
+      tags:
+      - swagger
+produces:
+- application/json
+schemes:
+- http
+swagger: "2.0"
+tags:
+- description: Managing your addresses
+  name: addresses
+- description: status of the app
+  name: status
+- description: prometheus metrics
+  name: metrics

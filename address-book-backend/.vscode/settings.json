@@ -1,0 +1,28 @@
+{
+    "spectral.enable": true,
+    "spectral.run": "onSave",
+    "spectral.rulesetFile": "./spectral.config.yml",
+    "spectral.validateFiles": [
+        "**/openapi/**/*.json"
+    ],
+    "cSpell.words": [
+        "apienablement",
+        "azuredevops",
+        "carlmjohnson",
+        "consumersecurity",
+        "devenv",
+        "gocache",
+        "godotenv",
+        "hadolint",
+        "joho",
+        "morkid",
+        "robfig",
+        "runenv",
+        "schwarzit",
+        "securitydefinitions",
+        "snyk",
+        "sonarqube",
+        "tokenurl",
+        "versioninfo"
+    ]
+}

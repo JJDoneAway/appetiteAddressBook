@@ -1,0 +1,81 @@
+trigger:
+  batch: true
+  paths:
+    include:
+    - address-book-frontend/*
+
+resources:
+  repositories:
+    - repository: templates
+      type: git
+      ref: refs/heads/master
+      name: schwarzit.odj-pipeline-templates/odj-deliver-templates
+
+variables:
+  - group: odj-technical-product-properties
+  - group: odj-component-address-book-frontend-properties
+
+parameters:
+  - name: stage
+    displayName: Deploy to Stage
+    type: string
+    default: Dev
+    values:
+      - Auto
+      - Dev
+      - Test
+
+extends:
+  template: templates/technologies/pnpm/v2/odj-pipeline-template-technology-pnpm.yml@templates
+  parameters:
+    gathered_build_artifacts: $(component)
+    odj_devenv_static_code_analysis:
+      - sonarqube_saas
+      - hadolint_dockerfile
+      - opa_dockerfile
+    odj_runenv_runtime: k8s # Managed by ODJ, do not modify
+    odj_runenv_provider: stackit # Managed by ODJ, do not modify
+    odj_devenv_artifact_repository:
+      - artifactory_saas
+    odj_devenv_dependency_scanner:
+      - snyk_saas_dependency
+      - snyk_saas_dockerfile
+    odj_devenv_pipeline: azuredevops # Managed by ODJ, do not modify
+    odj_devenv_code_repository: azuredevops # Managed by ODJ, do not modify
+    odj_runenv_component_type: deployable # Managed by ODJ, do not modify
+    worker_prefix: wrk-  # Managed by ODJ, do not modify
+    manifest_mode: true  # Managed by ODJ, do not modify
+    
+    productive_branch: refs/heads/main
+    ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
+      odj_deploy_stages:
+      - prod
+
+    node_version: 21.5.x
+    pnpm_cli_version: latest-8
+
+    # Disabling OpenAPI spec upload and linting as this blueprint is for frontend projects
+    openapi_enabled: false
+    openapi_linting_enabled: false
+
+    #there are no tests
+    run_test: false
+    publish_test_results: false
+
+    # Specify the pnpm command used for building the app during ci
+    build_command: build:ci
+    # Specify the pnpm command used for linting during ci
+    lint_command: lint:ci
+    # Specify the pnpm command used for running the unit tests
+    test_command: test:ci
+
+    # This step automatically creates a .npmrc with credentials for the cloud artifactory.
+    # With this there is no need to store your own credentials somewhere, just don't commit your local .npmrc file to git.
+    preSourcecodeBuild:
+      - bash: |
+          echo "registry = https://schwarzit.jfrog.io/artifactory/api/npm/npm/" > ~/.npmrc
+        displayName: Creating initial .npmrc
+      - template: templates/support/create-npmrc/create-npmrc.yml@templates
+        parameters:
+          target_path: ~
+
