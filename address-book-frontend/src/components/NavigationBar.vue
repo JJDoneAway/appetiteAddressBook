@@ -1,9 +1,9 @@
 <template>
-  <div class="w3-top">
-    <div class="w3-bar w3-grey">
+  <div class="w3-top w3-card-4 w3-white">
+    <div class="w3-bar">
       <router-link
         :to="{ name: 'Editor' }"
-        class="w3-bar-item w3-border-right w3-button w3-padding-large"
+        class="w3-bar-item w3-button w3-padding-large"
         style="width: 14em"
         exact
       >
@@ -12,7 +12,7 @@
       >
       <div class="w3-dropdown-hover">
         <button
-          class="w3-button w3-border-right w3-button w3-padding-large"
+          class="w3-button w3-button w3-padding-large"
           style="width: 13em"
         >
           <img src="@/assets/toolsIcon.png" alt="" class="icons" /> Tools
@@ -23,8 +23,9 @@
           >
         </div>
       </div>
-      <div class="w3-bar-item w3-right" style="padding: 1em 1em">
-        Address Book of {{ userName }}
+      <div class="w3-bar-item w3-right">
+        <img src="@/assets/userIcon.png" alt="" class="icons" /> Address Book of
+        {{ userName }}
       </div>
     </div>
   </div>
@@ -52,15 +53,3 @@ onMounted(() => {
   addressStor.getUserName();
 });
 </script>
-
-<style scoped>
-.router-link-active {
-  font-weight: bold;
-}
-
-.icons {
-  height: 1.8em;
-  width: auto;
-  margin: -1em 0.1em -0.8em 0em;
-}
-</style>

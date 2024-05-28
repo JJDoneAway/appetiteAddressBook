@@ -1,6 +1,7 @@
 <template>
   <input
-    class="w3-bar-item w3-input w3-round w3-hover-light-grey my-input"
+    class="w3-bar-item w3-input w3-border w3-hover-light-grey"
+    style="width: 30em"
     placeholder="Search..."
     v-model="value"
     @keyup.enter="search()"
@@ -8,11 +9,11 @@
   <img
     src="@/assets/search.png"
     alt=""
-    class="w3-bar-item w3-button w3-ripple my-icon"
-    style="height: 2.1em; margin-top: 0.19em"
+    class="w3-bar-item w3-button w3-border w3-ripple my-icon"
   />
   <button
-    class="w3-bar-item w3-button w3-ripple w3-border-right w3-border-left"
+    class="w3-bar-item w3-button w3-border w3-ripple"
+    style="margin-left: 0.5em"
     @click="clear()"
   >
     Clear
@@ -34,15 +35,8 @@ const clear = () => {
 </script>
 <style>
 .my-icon {
-  height: 2.1em;
+  height: 2.7em;
   width: auto;
-  margin-left: -3em;
-  margin-top: 0.19em;
-}
-.my-input {
-  height: 2.1em;
-  margin-top: 0.2em;
-  margin-left: 1em;
-  width: 25em !important;
+  margin-left: 0.5em;
 }
 </style>

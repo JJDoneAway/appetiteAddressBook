@@ -1,9 +1,9 @@
 <template>
   <div v-if="showEditor" class="w3-card-4">
     <!-- title-->
-    <div class="w3-container w3-grey">
-      <h5>{{ title }}</h5>
-    </div>
+    <header class="w3-container w3-white">
+      <h2>{{ title }}</h2>
+    </header>
 
     <!-- Validation errors -->
     <div v-if="validationErrors.length > 0">
@@ -19,30 +19,30 @@
 
     <!-- input fields-->
     <div class="w3-container">
-      <label>First Name</label>
+      <label>First Name:</label>
       <input
-        class="w3-input"
+        class="w3-input w3-border"
         type="text"
         name="firstName"
         v-model="address.firstName"
       />
-      <label>Last Name</label>
+      <label>Last Name:</label>
       <input
-        class="w3-input"
+        class="w3-input w3-border"
         type="text"
         name="lastName"
         v-model="address.lastName"
       />
-      <label>Email</label>
+      <label>Email:</label>
       <input
-        class="w3-input"
+        class="w3-input w3-border"
         type="text"
         name="email"
         v-model="address.email"
       />
-      <label>Phone</label>
+      <label>Phone:</label>
       <input
-        class="w3-input"
+        class="w3-input w3-border"
         type="text"
         name="phone"
         v-model="address.phone"
@@ -54,7 +54,7 @@
         <div class="w3-bar">
           <button
             v-if="create"
-            class="w3-button w3-ripple w3-gray"
+            class="w3-button w3-ripple w3-border"
             @click="createAddress()"
             style="margin-right: 5px; width: 8em"
           >
@@ -70,7 +70,7 @@
           </button>
           <button
             v-if="!create"
-            class="w3-button w3-ripple w3-gray"
+            class="w3-button w3-ripple w3-border"
             @click="updateAddress()"
             style="margin-right: 5px; width: 8em"
           >

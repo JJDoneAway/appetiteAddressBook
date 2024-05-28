@@ -70,7 +70,7 @@ export const useAddressStore = defineStore("address", {
         .get(
           `${import.meta.env.VITE_URL}/addresses?page=${
             this.currentPage
-          }&size=16&sort=${this.getSortString()}${getFilter(this.filter)}`
+          }&size=14&sort=${this.getSortString()}${getFilter(this.filter)}`
         )
         .then((response) => {
           this.addresses = [...response.data.items];
