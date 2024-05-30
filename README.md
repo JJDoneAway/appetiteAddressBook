@@ -9,7 +9,7 @@ It is deployed within one single Docker container which is very unusual but for 
 # how to build
 run `build_decker.sh`
 
-# how to run 
+# how to run local build
 run `run_docker.sh`
 
 # used environment parameters
@@ -20,3 +20,5 @@ ODJ_DEP_POSTGRESQL_URL=postgresql://{db user}:{db password}@{db host name}:{db p
 ODJ_DEP_USER_NAME='Name of the address book owner'
 ```
 
+# run external image
+run `run.sh`

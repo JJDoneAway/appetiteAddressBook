@@ -19,7 +19,6 @@ while :
 do
   sleep 10 &
   wait $!
-  echo "Sleep over"
 done
 
 docker kill addressbook
